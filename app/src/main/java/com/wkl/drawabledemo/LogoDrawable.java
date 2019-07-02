@@ -24,7 +24,6 @@ import org.xmlpull.v1.XmlPullParser;
  * On 2019-06-28
  * <p>
  * 可以指定背景色以及圆角，并且中间有 logo 的 Drawable
- * 必须使用 CustomDrawableLoader 来加载
  * 自定义 Drawable 的 xml 需要 build tools 的版本大于等于 24, 否则编译报错
  */
 public class LogoDrawable extends Drawable implements Drawable.Callback {
