@@ -26,6 +26,12 @@ public class MainActivity extends AppCompatActivity {
                 .placeholder(R.drawable.common_default_img2)
                 .into(iv2);
 
+        ImageView iv3 = findViewById(R.id.dr1);
+        GlideApp.with(this)
+                .load("")
+                .placeholder(R.drawable.common_default_img2)
+                .into(iv3);
+
     }
 
 }

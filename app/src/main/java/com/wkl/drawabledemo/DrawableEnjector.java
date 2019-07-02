@@ -32,7 +32,7 @@ public class DrawableEnjector {
                             try {
 
                                 Context c = (Context) args[0];
-                                return LogoDrawable.createFromXmlInner(c.getResources(), (XmlPullParser) args[1],
+                                return PlaceholderDrawable.createFromXmlInner(c.getResources(), (XmlPullParser) args[1],
                                         (AttributeSet) args[2], (Resources.Theme) args[3]);
                             } catch (Throwable e) {
                                 e.printStackTrace();
@@ -48,9 +48,9 @@ public class DrawableEnjector {
             Method addDelegate = appcompat.getDeclaredMethod("addDelegate", String.class, delegateClass);
             addDelegate.setAccessible(true);
 
-            addDelegate.invoke(appcompatIns, "LogoDrawable", delegateIns);
+            addDelegate.invoke(appcompatIns, PlaceholderDrawable.class.getSimpleName(), delegateIns);
             if (Build.VERSION.SDK_INT < 24) {
-                addDelegate.invoke(appcompatIns, LogoDrawable.class.getName(), delegateIns);
+                addDelegate.invoke(appcompatIns, PlaceholderDrawable.class.getName(), delegateIns);
             }
 
         } catch (Throwable e) {

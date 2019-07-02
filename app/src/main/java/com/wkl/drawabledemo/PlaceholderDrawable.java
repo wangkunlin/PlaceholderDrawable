@@ -26,9 +26,9 @@ import org.xmlpull.v1.XmlPullParser;
  * 可以指定背景色以及圆角，并且中间有 logo 的 Drawable
  * 自定义 Drawable 的 xml 需要 build tools 的版本大于等于 24, 否则编译报错
  */
-public class LogoDrawable extends Drawable implements Drawable.Callback {
+public class PlaceholderDrawable extends Drawable implements Drawable.Callback {
 
-    private LogoState mLogoState;
+    private PlaceholderState mPlaceholderState;
     private boolean mMutated;
 
     private final Path mPath = new Path();
@@ -37,12 +37,12 @@ public class LogoDrawable extends Drawable implements Drawable.Callback {
     /**
      * 必须 public 否则 api >= 24 的系统 反射会失败
      */
-    public LogoDrawable() {
+    public PlaceholderDrawable() {
         this(null, null);
     }
 
-    private LogoDrawable(LogoState state, Resources res) {
-        mLogoState = createConstantState(state, res);
+    private PlaceholderDrawable(PlaceholderState state, Resources res) {
+        mPlaceholderState = createConstantState(state, res);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class LogoDrawable extends Drawable implements Drawable.Callback {
         if (bounds.isEmpty()) {
             return;
         }
-        LogoState state = mLogoState;
+        PlaceholderState state = mPlaceholderState;
         Paint paint = state.mPaint;
         mRect.set(bounds);
 
@@ -90,12 +90,12 @@ public class LogoDrawable extends Drawable implements Drawable.Callback {
 
     @Override
     public void setAlpha(int alpha) {
-        final int oldAlpha = mLogoState.mPaint.getAlpha();
+        final int oldAlpha = mPlaceholderState.mPaint.getAlpha();
         if (alpha != oldAlpha) {
-            mLogoState.mPaint.setAlpha(alpha);
-            if (mLogoState.mChild != null) {
-                if (mLogoState.mChild.mDrawable != null) {
-                    mLogoState.mChild.mDrawable.setAlpha(alpha);
+            mPlaceholderState.mPaint.setAlpha(alpha);
+            if (mPlaceholderState.mChild != null) {
+                if (mPlaceholderState.mChild.mDrawable != null) {
+                    mPlaceholderState.mChild.mDrawable.setAlpha(alpha);
                 }
             }
             invalidateSelf();
@@ -104,15 +104,15 @@ public class LogoDrawable extends Drawable implements Drawable.Callback {
 
     @Override
     public int getAlpha() {
-        return mLogoState.mPaint.getAlpha();
+        return mPlaceholderState.mPaint.getAlpha();
     }
 
     @Override
     public void setColorFilter(@Nullable ColorFilter colorFilter) {
-        mLogoState.mPaint.setColorFilter(colorFilter);
-        if (mLogoState.mChild != null) {
-            if (mLogoState.mChild.mDrawable != null) {
-                mLogoState.mChild.mDrawable.setColorFilter(colorFilter);
+        mPlaceholderState.mPaint.setColorFilter(colorFilter);
+        if (mPlaceholderState.mChild != null) {
+            if (mPlaceholderState.mChild.mDrawable != null) {
+                mPlaceholderState.mChild.mDrawable.setColorFilter(colorFilter);
             }
         }
         invalidateSelf();
@@ -121,19 +121,19 @@ public class LogoDrawable extends Drawable implements Drawable.Callback {
     @Nullable
     @Override
     public ColorFilter getColorFilter() {
-        return mLogoState.mPaint.getColorFilter();
+        return mPlaceholderState.mPaint.getColorFilter();
     }
 
     @Override
     public int getOpacity() {
-        return mLogoState.getOpacity();
+        return mPlaceholderState.getOpacity();
     }
 
     @Override
     protected boolean onStateChange(int[] state) {
         boolean changed = false;
-        if (mLogoState.mChild != null) {
-            Drawable dr = mLogoState.mChild.mDrawable;
+        if (mPlaceholderState.mChild != null) {
+            Drawable dr = mPlaceholderState.mChild.mDrawable;
             if (dr != null && dr.isStateful() && dr.setState(state)) {
                 changed = true;
             }
@@ -144,8 +144,8 @@ public class LogoDrawable extends Drawable implements Drawable.Callback {
     @Override
     protected boolean onLevelChange(int level) {
         boolean changed = false;
-        if (mLogoState.mChild != null) {
-            Drawable dr = mLogoState.mChild.mDrawable;
+        if (mPlaceholderState.mChild != null) {
+            Drawable dr = mPlaceholderState.mChild.mDrawable;
             if (dr != null && dr.setLevel(level)) {
                 changed = true;
             }
@@ -160,19 +160,19 @@ public class LogoDrawable extends Drawable implements Drawable.Callback {
     }
 
     private void setCornerRadius(float radius) {
-        mLogoState.setCornerRadius(radius);
+        mPlaceholderState.setCornerRadius(radius);
         invalidateSelf();
     }
 
     private void setCornerRadii(@Nullable float[] radii) {
-        mLogoState.setCornerRadii(radii);
+        mPlaceholderState.setCornerRadii(radii);
         invalidateSelf();
     }
 
     @NonNull
-    public static LogoDrawable createFromXmlInner(@NonNull Resources r, @NonNull XmlPullParser parser,
-                                                  @NonNull AttributeSet attrs, Resources.Theme theme) {
-        final LogoDrawable drawable = new LogoDrawable();
+    public static PlaceholderDrawable createFromXmlInner(@NonNull Resources r, @NonNull XmlPullParser parser,
+                                                         @NonNull AttributeSet attrs, Resources.Theme theme) {
+        final PlaceholderDrawable drawable = new PlaceholderDrawable();
         drawable.inflate(r, parser, attrs, theme);
         return drawable;
     }
@@ -181,31 +181,31 @@ public class LogoDrawable extends Drawable implements Drawable.Callback {
     TypedArray makeAttributes(@NonNull Resources res, @Nullable Resources.Theme theme,
                               @NonNull AttributeSet set) {
         if (theme == null) {
-            return res.obtainAttributes(set, R.styleable.LogoDrawable);
+            return res.obtainAttributes(set, R.styleable.PlaceholderDrawable);
         }
-        return theme.obtainStyledAttributes(set, R.styleable.LogoDrawable, 0, 0);
+        return theme.obtainStyledAttributes(set, R.styleable.PlaceholderDrawable, 0, 0);
     }
 
     @Override
     public void inflate(@NonNull Resources r, @NonNull XmlPullParser parser, @NonNull AttributeSet attrs,
                         @Nullable Resources.Theme theme) {
-        final LogoState state = mLogoState;
+        final PlaceholderState state = mPlaceholderState;
         final int density = resolveDensity2(r, 0);
         state.setDensity(density);
 
         TypedArray a = makeAttributes(r, theme, attrs);
 
-        int radius = a.getDimensionPixelSize(R.styleable.LogoDrawable_android_radius, 0);
+        int radius = a.getDimensionPixelSize(R.styleable.PlaceholderDrawable_android_radius, 0);
         setCornerRadius(radius);
 
         final int topLeftRadius = a.getDimensionPixelSize(
-                R.styleable.LogoDrawable_android_topLeftRadius, radius);
+                R.styleable.PlaceholderDrawable_android_topLeftRadius, radius);
         final int topRightRadius = a.getDimensionPixelSize(
-                R.styleable.LogoDrawable_android_topRightRadius, radius);
+                R.styleable.PlaceholderDrawable_android_topRightRadius, radius);
         final int bottomLeftRadius = a.getDimensionPixelSize(
-                R.styleable.LogoDrawable_android_bottomLeftRadius, radius);
+                R.styleable.PlaceholderDrawable_android_bottomLeftRadius, radius);
         final int bottomRightRadius = a.getDimensionPixelSize(
-                R.styleable.LogoDrawable_android_bottomRightRadius, radius);
+                R.styleable.PlaceholderDrawable_android_bottomRightRadius, radius);
         if (topLeftRadius != radius || topRightRadius != radius ||
                 bottomLeftRadius != radius || bottomRightRadius != radius) {
             // The corner radii are specified in clockwise order (see Path.addRoundRect())
@@ -217,7 +217,7 @@ public class LogoDrawable extends Drawable implements Drawable.Callback {
             });
         }
 
-        Drawable dr = a.getDrawable(R.styleable.LogoDrawable_android_drawable);
+        Drawable dr = a.getDrawable(R.styleable.PlaceholderDrawable_android_drawable);
         if (dr != null) {
             ChildDrawable childDrawable = new ChildDrawable(density);
             childDrawable.mDrawable = dr;
@@ -226,7 +226,7 @@ public class LogoDrawable extends Drawable implements Drawable.Callback {
 
         final Paint paint = state.mPaint;
         int color = paint.getColor();
-        color = a.getColor(R.styleable.LogoDrawable_android_color, color);
+        color = a.getColor(R.styleable.PlaceholderDrawable_android_color, color);
         paint.setColor(color);
 
         a.recycle();
@@ -235,18 +235,18 @@ public class LogoDrawable extends Drawable implements Drawable.Callback {
     @Nullable
     @Override
     public ConstantState getConstantState() {
-        mLogoState.mChangingConfigurations = getChangingConfigurations();
-        return mLogoState;
+        mPlaceholderState.mChangingConfigurations = getChangingConfigurations();
+        return mPlaceholderState;
     }
 
     @Override
     public int getChangingConfigurations() {
-        return super.getChangingConfigurations() | mLogoState.getChangingConfigurations();
+        return super.getChangingConfigurations() | mPlaceholderState.getChangingConfigurations();
     }
 
     @Override
     public void invalidateDrawable(@NonNull Drawable who) {
-        mLogoState.invalidateCache();
+        mPlaceholderState.invalidateCache();
         invalidateSelf();
     }
 
@@ -263,9 +263,9 @@ public class LogoDrawable extends Drawable implements Drawable.Callback {
     @Override
     public boolean setVisible(boolean visible, boolean restart) {
         boolean changed = super.setVisible(visible, restart);
-        if (mLogoState.mChild != null) {
-            if (mLogoState.mChild.mDrawable != null) {
-                mLogoState.mChild.mDrawable.setVisible(visible, restart);
+        if (mPlaceholderState.mChild != null) {
+            if (mPlaceholderState.mChild.mDrawable != null) {
+                mPlaceholderState.mChild.mDrawable.setVisible(visible, restart);
             }
         }
         return changed;
@@ -275,8 +275,8 @@ public class LogoDrawable extends Drawable implements Drawable.Callback {
     @Override
     public Drawable mutate() {
         if (!mMutated && super.mutate() == this) {
-            mLogoState = createConstantState(mLogoState, null);
-            final ChildDrawable child = mLogoState.mChild;
+            mPlaceholderState = createConstantState(mPlaceholderState, null);
+            final ChildDrawable child = mPlaceholderState.mChild;
             Drawable dr = child.mDrawable;
             if (dr != null) {
                 dr.mutate();
@@ -286,11 +286,11 @@ public class LogoDrawable extends Drawable implements Drawable.Callback {
         return this;
     }
 
-    private LogoState createConstantState(@Nullable LogoState state, @Nullable Resources res) {
-        return new LogoState(state, this, res);
+    private PlaceholderState createConstantState(@Nullable PlaceholderState state, @Nullable Resources res) {
+        return new PlaceholderState(state, this, res);
     }
 
-    final static class LogoState extends ConstantState {
+    final static class PlaceholderState extends ConstantState {
 
         int mChangingConfigurations;
         ChildDrawable mChild;
@@ -302,8 +302,8 @@ public class LogoDrawable extends Drawable implements Drawable.Callback {
         private float mRadius;
         private float[] mRadiusArray;
 
-        LogoState(@Nullable LogoState orig, @NonNull LogoDrawable owner,
-                  @Nullable Resources res) {
+        PlaceholderState(@Nullable PlaceholderState orig, @NonNull PlaceholderDrawable owner,
+                         @Nullable Resources res) {
             mDensity = resolveDensity2(res, orig != null ? orig.mDensity : 0);
 
             if (orig != null) {
@@ -378,13 +378,13 @@ public class LogoDrawable extends Drawable implements Drawable.Callback {
         @NonNull
         @Override
         public Drawable newDrawable() {
-            return new LogoDrawable(this, null);
+            return new PlaceholderDrawable(this, null);
         }
 
         @NonNull
         @Override
         public Drawable newDrawable(@Nullable Resources res) {
-            return new LogoDrawable(this, res);
+            return new PlaceholderDrawable(this, res);
         }
 
         @Override
@@ -423,7 +423,7 @@ public class LogoDrawable extends Drawable implements Drawable.Callback {
             mDensity = density;
         }
 
-        ChildDrawable(@NonNull ChildDrawable orig, @NonNull LogoDrawable owner,
+        ChildDrawable(@NonNull ChildDrawable orig, @NonNull PlaceholderDrawable owner,
                       @Nullable Resources res) {
             final Drawable dr = orig.mDrawable;
             final Drawable clone;
@@ -433,7 +433,7 @@ public class LogoDrawable extends Drawable implements Drawable.Callback {
                     clone = dr;
                     if (dr.getCallback() != null) {
                         // This drawable already has an owner.
-                        Log.w("LogoDrawable", "Invalid drawable added to LogoDrawable! Drawable already "
+                        Log.w("PlaceholderDrawable", "Invalid drawable added to PlaceholderDrawable! Drawable already "
                                         + "belongs to another owner but does not expose a constant state.",
                                 new RuntimeException());
                     }
