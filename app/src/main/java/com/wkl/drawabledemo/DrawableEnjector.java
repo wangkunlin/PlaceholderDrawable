@@ -24,13 +24,12 @@ public class DrawableEnjector {
 
     public static void enject() {
         try {
-            Class<?> delegateClass = Class.forName("android.support.v7.widget.AppCompatDrawableManager$InflateDelegate");
+            Class<?> delegateClass = Class.forName("androidx.appcompat.widget.ResourceManagerInternal$InflateDelegate");
             Object delegateIns = Proxy.newProxyInstance(DrawableEnjector.class.getClassLoader(), new Class[]{delegateClass},
                     new InvocationHandler() {
                         @Override
                         public Object invoke(Object proxy, Method method, Object[] args) {
                             try {
-
                                 Context c = (Context) args[0];
                                 return PlaceholderDrawable.createFromXmlInner(c.getResources(), (XmlPullParser) args[1],
                                         (AttributeSet) args[2], (Resources.Theme) args[3]);
@@ -40,7 +39,7 @@ public class DrawableEnjector {
                             return null;
                         }
                     });
-            Class<?> appcompat = Class.forName("android.support.v7.widget.AppCompatDrawableManager");
+            Class<?> appcompat = Class.forName("androidx.appcompat.widget.ResourceManagerInternal");
             Method get = appcompat.getMethod("get");
 
             Object appcompatIns = get.invoke(null);
